@@ -28,3 +28,7 @@ Aviso: la configuración por defecto abre el puerto 22 a propósito, solo
 
 para el laboratorio. No usar en producción.
 
+
+
+Cómo repetir el laboratorio: instalar Terraform y la AWS CLI, configurar un perfil con permisos mínimos y ejecutar terraform init, plan y apply. Al terminar, ejecutar terraform destroy para no generar costos.
+
