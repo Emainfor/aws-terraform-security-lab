@@ -20,21 +20,23 @@ Un SSH expuesto a `0.0.0.0/0` es descubierto por escaneos automáticos y recibe 
 ## 🧱 Arquitectura
 
 ```
-   Internet ──► Security Group "lab-ssh" ──► EC2 t3.micro (Ubuntu)
+   Internet ──► Security Group "lab-ssh" ──► EC2 t3.micro (Ubuntu 22.04)
                  regla: 22/tcp desde ssh_cidr        │
                                                      └─ IMDSv2 obligatorio
 ```
 
-Región: São Paulo (`sa-east-1`). VPC por defecto (simplificación de laboratorio).
+Región: São Paulo (`sa-east-1`). Perfil de AWS CLI: `lab`. VPC por defecto (simplificación de laboratorio).
 
 ## 🧪 Pruebas realizadas
 Misma red de origen, cambiando solo la regla de entrada:
 
 | # | Regla de entrada (22/tcp) | Esperado | Resultado |
 |---|---|---|---|
-| 1 | Abierta a todos (`0.0.0.0/0`) | Puerto accesible | Accesible [verificar cómo se probó] |
+| 1 | Abierta a todos (`0.0.0.0/0`) | Puerto accesible | Puerto accesible |
 | 2 | Otra dirección distinta | Bloqueado | Falla (sin respuesta) |
-| 3 | Mi dirección (`/32`) | Puerto accesible | Accesible |
+| 3 | Mi dirección (`<mi-IP>/32`) | Puerto accesible | Puerto accesible |
+
+> Nota: la instancia todavía no tiene par de claves, por lo que se probó la **alcanzabilidad del puerto**, no el inicio de sesión.
 
 📎 Evidencia: carpeta `evidencia/` *(pendiente de agregar, sin IPs reales)*.
 
@@ -51,11 +53,11 @@ Misma red de origen, cambiando solo la regla de entrada:
 - En un entorno real conviene **no abrir el 22**: usar **AWS Systems Manager (Session Manager)** o VPN.
 - Una alerta de presupuesto de AWS me permitió rastrear el gasto del laboratorio (≈ USD 0,05) hasta el servicio y la región.
 
-## 🚧 Limitaciones conocidas (honestas)
+## 🚧 Limitaciones conocidas
 - Salida (egress) abierta a todo.
 - Sin cifrado explícito del volumen ni monitoreo detallado.
 - Usa la VPC por defecto con IP pública.
-- Sin pipeline de escaneo automático todavía.
+- Sin par de claves SSH ni pipeline de escaneo automático todavía.
 
 ## 🗺️ Próximos pasos
 - [ ] Agregar par de claves SSH para autenticar de verdad
@@ -66,11 +68,13 @@ Misma red de origen, cambiando solo la regla de entrada:
 ## ▶️ Cómo repetirlo
 ```bash
 terraform init
-terraform plan  -var 'ssh_cidr=TU.IP.AQUI/32'
-terraform apply -var 'ssh_cidr=TU.IP.AQUI/32'
+terraform plan  -var 'ssh_cidr=<mi-IP>/32'
+terraform apply -var 'ssh_cidr=<mi-IP>/32'
 # ...practicar...
 terraform destroy   # siempre, para no generar costos
 ```
+⚠️ **Sin `-var`, el valor por defecto de `ssh_cidr` es `0.0.0.0/0` (abierto a todo internet).**
+
 Requisitos: Terraform, AWS CLI y un perfil con permisos mínimos.
 
 ## 💰 Costo
