@@ -38,7 +38,23 @@ Misma red de origen, cambiando solo la regla de entrada:
 
 > Nota: la instancia todavía no tiene par de claves, por lo que se probó la **alcanzabilidad del puerto**, no el inicio de sesión.
 
-📎 Evidencia: carpeta `evidencia/` *(pendiente de agregar, sin IPs reales)*.
+### 📎 Evidencia
+
+Capturas en [`evidencia/`](evidencia/). Se ocultaron IPs, IDs de recursos y usuario local.
+
+**1. Apply y prueba de alcanzabilidad del puerto 22**
+
+![Terraform apply y Test-NetConnection al puerto 22](evidencia/01-apply-y-prueba-redactada.png)
+
+**2. Limpieza del laboratorio (`terraform destroy`)**
+
+![Terraform destroy completado, 2 recursos destruidos](evidencia/02-destroy-redactada.png)
+
+**3. Instancia del laboratorio en ejecución (EC2 t3.micro, sa-east-1)**
+
+![Instancia EC2 en ejecución](evidencia/03-instancia-redactada.png)
+
+**Evidencia pendiente de agregar:** captura de la regla de entrada del security group en cada caso (consola de AWS) y de la prueba contra la IP de la instancia con la regla cambiada a otra dirección. Las pruebas 1 a 3 de la tabla ya fueron realizadas; falta documentarlas con capturas.
 
 ## 🛡️ Controles implementados
 
